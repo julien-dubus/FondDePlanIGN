@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DL IGN Map</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="proj4.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div id="container">
+        <h1>Créer un fond de plan IGN</h1>
+        <form id="coordinates-form" onsubmit="return false">
+            <div class="input-group">
+                <label for="y1">Latitude 1</label>
+                <input type="number" id="y1" name="y1" step=0.01 required>
+            </div>
+            <div class="input-group">
+                <label for="x1">Longitude 1</label>
+                <input type="number" id="x1" name="x1" step=0.01 required>
+            </div>
+            <div class="input-group">
+                <label for="y2">Latitude 2</label>
+                <input type="number" id="y2" name="y2" step=0.01 required>
+            </div>
+            <div class="input-group">
+                <label for="x2">Longitude 2</label>
+                <input type="number" id="x2" name="x2" step=0.01 required>
+            </div>
+            <div class="input-group">
+                <label for="zoom">Zoom</label>
+                <input type="number" id="zoom" name="zoom" placeholder="16-19 (Recommandé)" required>
+            </div>
+            <button id='submitButton' type="button" onClick="startProcess()">Générer</button>
+            <button id='downloadButton' type="button" onClick="downloadImage(blob)" disabled>Télécharger</button>
+        </form>
+        <div id="progress-container">
+            <p id="progress-text"></p>
+        </div>
+        <div id="image-container"></div>
+    </div>
+</body>
+</html>
