@@ -28,9 +28,10 @@
             </div>
             <div class="input-group">
                 <label for="zoom">Zoom</label>
-                <input type="number" id="zoom" name="zoom" placeholder="16-19 (Recommandé)" required>
+                <input type="number" id="zoom" name="zoom" min=3 max=21 placeholder="16-19 (Recommandé)" required>
             </div>
             <button id='submitButton' type="button" onClick="startProcess()">Générer</button>
+	    <button id='openButton' type="button" onClick="openImage(mergedImage)" disabled>Ouvrir</button>
             <button id='downloadButton' type="button" onClick="downloadImage(blob)" disabled>Télécharger</button>
         </form>
         <div id="progress-container">

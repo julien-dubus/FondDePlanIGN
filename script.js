@@ -96,6 +96,9 @@ async function main() {
 			
 			document.getElementById('downloadButton').disabled=false;
 			downloadButton.onclick = () => downloadImage(blob);
+
+			document.getElementById('openButton').disabled=false;
+			openButton.onclick = () => openImage(mergedImage);
 		}
 	}
 }
@@ -151,6 +154,10 @@ function downloadImage(blob, filename = 'merged_image.png') {
 	document.body.removeChild(link);
 }
 
+function openImage(image) {
+	const url=image.getAttribute('src');
+	window.open(url);	
+}
 
 const x0 = -20037508.3427891992032528
 const y0 = 20037508.3427891992032528
