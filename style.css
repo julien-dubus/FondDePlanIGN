@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-flow: row wrap;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -14,7 +15,23 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 320px;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+#map-container {
+    width: 60%;
+    height: 80%;
+    margin-left: 0;
+    margin-right: 5%;
+    margin-bottom: 50px;
+    border: 2px solid #333;
+}
+
+#map {
+    position: relative;
+    height: 100%;
 }
 
 h1 {
@@ -33,9 +50,11 @@ h1 {
     color: #555;
 }
 
-.input-group input {
+.input-group input,
+.input-group select {
     width: 100%;
     padding: 8px;
+    background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
@@ -62,14 +81,86 @@ button:disabled {
     cursor: not-allowed;
 }
 
+#instructions-container {
+    margin-top: 20px;
+}
+
+#instructions-container h2 {
+    text-align: left;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#instructions-container p {
+    color: #555;
+}
+
 #progress-container {
     margin-top: 20px;
     text-align: center;
 }
 
 #image-container {
-    margin-top: 20px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin-top: 20px;
+}
+
+#examples-container {
+    margin-top: 30px;
+}
+
+#examples-container h2 {
+    text-align: left;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.example {
+    position: relative;
+    padding: 10px;
+    background-color: #e7e7e7;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    text-align: center;
+    color: #333;
+    font-weight: bold;
+}
+
+.example-images {
+    display: none;
+    position: fixed; 
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20%; 
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 80vh;
+    overflow-y: auto;
+    white-space: nowrap; 
+}
+
+.example-tile {
+    margin: 5px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.example-tile img {
+    width: 256px;
+    display: block;
+    border: 1px solid #333;
+}
+
+.example-tile span {
+    margin-top: 15px;
+    display: block;
+    text-align: center;
+    font-size: 25px;
+    color: #333;
 }

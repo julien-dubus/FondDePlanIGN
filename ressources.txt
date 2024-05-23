@@ -1,0 +1,2 @@
+Méthode :
+https://geoservices.ign.fr/documentation/services/services-deprecies/images-tuilees-wmts-ogc

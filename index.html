@@ -1,43 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DL IGN Map</title>
+    <title>Créer un fond de plan</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
     <script src="proj4.js"></script>
-    <script src="script.js"></script>
+    <script src="leaflet/leaflet.js"></script>
 </head>
 <body>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
     <div id="container">
-        <h1>Créer un fond de plan IGN</h1>
+        <h1>Créer un fond de plan</h1>
         <form id="coordinates-form" onsubmit="return false">
             <div class="input-group">
                 <label for="y1">Latitude 1</label>
-                <input type="number" id="y1" name="y1" step=0.01 required>
+                <input type="number" id="y1" name="y1" step="0.01" oninput="updateMarkers()" disabled required>
             </div>
             <div class="input-group">
                 <label for="x1">Longitude 1</label>
-                <input type="number" id="x1" name="x1" step=0.01 required>
+                <input type="number" id="x1" name="x1" step="0.01" oninput="updateMarkers()" disabled required>
             </div>
             <div class="input-group">
                 <label for="y2">Latitude 2</label>
-                <input type="number" id="y2" name="y2" step=0.01 required>
+                <input type="number" id="y2" name="y2" step="0.01" oninput="updateMarkers()" disabled required>
             </div>
             <div class="input-group">
                 <label for="x2">Longitude 2</label>
-                <input type="number" id="x2" name="x2" step=0.01 required>
+                <input type="number" id="x2" name="x2" step="0.01" oninput="updateMarkers()" disabled required>
             </div>
             <div class="input-group">
-                <label for="zoom">Zoom</label>
-                <input type="number" id="zoom" name="zoom" min=3 max=21 placeholder="16-19 (Recommandé)" required>
+                <label for="layer">Couche</label>
+                <select id="layer" name="layer" oninput="layerChange()" required>
+                    <option value="plan_ign">Plan IGN</option>
+                    <option value="orthophotos_ign">Orthophotos IGN</option>
+                    <option value="topo_ign">Carte topographique IGN</option>
+                    <option value="osm">OpenStreetMap</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="zoom">Niveau de détails</label>
+                <input type="number" id="zoom" name="zoom" min="3" max="21" placeholder="15-19 recommandé" oninput="this.value = Math.min(this.value,mapsData[document.getElementById('layer').value].zoom_max)" required>
             </div>
             <button id='submitButton' type="button" onClick="startProcess()">Générer</button>
-	    <button id='openButton' type="button" onClick="openImage(mergedImage)" disabled>Ouvrir</button>
+            <button id='openButton' type="button" onClick="openImage(mergedImage)" disabled>Ouvrir</button>
             <button id='downloadButton' type="button" onClick="downloadImage(blob)" disabled>Télécharger</button>
         </form>
         <div id="progress-container">
             <p id="progress-text"></p>
         </div>
         <div id="image-container"></div>
+        <div id="instructions-container">
+            <h2>Comment ça marche ?</h2>
+            <p> Placez deux points sur la carte pour délimiter une zone rectangulaire. Vous pouvez déplacer ces points ou renseignez leurs coordonnées manuellement si nécessaire.<br /><br />
+                Choisissez une couche et un niveau de détails (voir les exemples ci-dessous) puis cliquez sur "Générer".<br /><br />
+                Une fois le processus terminé, le fond de plan est prêt à être téléchargé.</p>
+        </div>
+        <div id="examples-container">
+            <h2>Niveaux de détails</h2>
+            <div class="example" onmouseover="showImages('plan_ign')" onmouseout="hideImages('plan_ign')">
+                Plan IGN
+                <div class="example-images" id="plan_ign-images">
+                    <div class="example-tile"> <img src="images/plan_ign_15.png" alt="Plan IGN 15"><span>15</span></div>
+                    <div class="example-tile"> <img src="images/plan_ign_16.png" alt="Plan IGN 16"><span>16</span></div>
+                    <div class="example-tile"> <img src="images/plan_ign_17.png" alt="Plan IGN 17"><span>17</span></div>
+                    <div class="example-tile"> <img src="images/plan_ign_18.png" alt="Plan IGN 18"><span>18</span></div>
+                    <div class="example-tile"> <img src="images/plan_ign_19.png" alt="Plan IGN 19"><span>19</span></div>
+                </div>
+            </div>
+            <div class="example" onmouseover="showImages('orthophotos_ign')" onmouseout="hideImages('orthophotos_ign')">
+                Orthophotos IGN
+                <div class="example-images" id="orthophotos_ign-images">
+                    <div class="example-tile"> <img src="images/orthophotos_ign_15.jpg" alt="Orthophotos IGN 15"><span>15</span></div>
+                    <div class="example-tile"> <img src="images/orthophotos_ign_16.jpg" alt="Orthophotos IGN 16"><span>16</span></div>
+                    <div class="example-tile"> <img src="images/orthophotos_ign_17.jpg" alt="Orthophotos IGN 17"><span>17</span></div>
+                    <div class="example-tile"> <img src="images/orthophotos_ign_18.jpg" alt="Orthophotos IGN 18"><span>18</span></div>
+                    <div class="example-tile"> <img src="images/orthophotos_ign_19.jpg" alt="Orthophotos IGN 19"><span>19</span></div>
+                </div>
+            </div>
+            <div class="example" onmouseover="showImages('topo_ign')" onmouseout="hideImages('topo_ign')">
+                Carte topographique IGN
+                <div class="example-images" id="topo_ign-images">
+                    <div class="example-tile"> <img src="images/topo_ign_15.jpg" alt="Orthophotos IGN 15"><span>15</span></div>
+                    <div class="example-tile"> <img src="images/topo_ign_16.jpg" alt="Orthophotos IGN 16"><span>16</span></div>
+                    <div class="example-tile"> <img src="images/no_image.jpg" alt="Non disponible"><span>17</span></div>
+                    <div class="example-tile"> <img src="images/no_image.jpg" alt="Non disponible"><span>18</span></div>
+                    <div class="example-tile"> <img src="images/no_image.jpg" alt="Non disponible"><span>19</span></div>
+                </div>
+            </div>
+            <div class="example" onmouseover="showImages('osm')" onmouseout="hideImages('osm')">
+                OpenStreetMap
+                <div class="example-images" id="osm-images">
+                    <div class="example-tile"> <img src="images/osm_15.png" alt="OSM 15"><span>15</span></div>
+                    <div class="example-tile"> <img src="images/osm_16.png" alt="POSM 16"><span>16</span></div>
+                    <div class="example-tile"> <img src="images/osm_17.png" alt="OSM 17"><span>17</span></div>
+                    <div class="example-tile"> <img src="images/osm_18.png" alt="OSM 18"><span>18</span></div>
+                    <div class="example-tile"> <img src="images/osm_19.png" alt="OSM 19"><span>19</span></div>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>
